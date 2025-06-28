@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -9,10 +10,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please add an email"],
     unique: true,
-    match: [
-      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-      "Please add a valid email",
-    ],
+    match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, "Please add a valid email"],
   },
   role: {
     type: String,
@@ -27,4 +25,13 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
+UserSchema.pre("save", async function (next) {
+  this.password = await bcrypt.hash(this.password, 12);
+
+  next();
+});
+
+UserSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
 module.exports = mongoose.model("User", UserSchema);
