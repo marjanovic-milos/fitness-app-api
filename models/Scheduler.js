@@ -29,9 +29,13 @@ const SchedulerSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  mealPlan: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Training",
+  mealPlans: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Meals",
+  },
+  Excercises: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Excercise",
   },
 });
 

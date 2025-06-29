@@ -1,11 +1,14 @@
 const mongoose = require("mongoose");
 
-const TrainingSchema = new mongoose.Schema({
+const ExcerciseSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "Please add a name"],
   },
-
+  created: {
+    type: Date,
+    default: Date.now(),
+  },
   video: {
     type: String,
     required: true,
@@ -15,4 +18,4 @@ const TrainingSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Training", TrainingSchema);
+module.exports = mongoose.model("Excercise", ExcerciseSchema);
