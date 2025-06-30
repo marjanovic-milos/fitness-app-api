@@ -61,5 +61,41 @@ exports.addMeal = catchAsync(async (req, res, next) => {
     data: meal,
   });
 });
-exports.updateMeal = catchAsync(async (req, res, next) => {});
-exports.deleteMeal = catchAsync(async (req, res, next) => {});
+exports.updateMeal = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { title } = req.body;
+
+  if (!title) {
+    return next(new AppError("Please provide us with name!", 400));
+  }
+
+  const meal = await Meal.findByIdAndUpdate(
+    id,
+    { title },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  res.status(200).json({
+    status: "success",
+    data: meal,
+  });
+});
+exports.deleteMeal = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  const meal = await Meal.findByIdAndDelete(id);
+  if (!meal) {
+    return next(new AppError("There is no meal with this id!", 400));
+  }
+  res.status(200).json({
+    status: "success",
+    data: {},
+  });
+});
+exports.getSavedMeals = catchAsync(async (req, res, next) => {
+  const result = await Meal.find({});
+  res.status(200).json({ success: true, data: result });
+});
