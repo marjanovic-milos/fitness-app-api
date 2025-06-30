@@ -1,10 +1,10 @@
-const express = require("express");
+import express from "express";
 const app = express();
-const dotenv = require("dotenv");
+import dotenv from "dotenv";
 const port = process.env.PORT || 3000;
-const errorHandler = require("./middleware/erorr");
-const authRoutes = require("./routes/authRoutes");
-const mealRoutes = require("./routes/mealRoutes");
+import errorHandler from "./middleware/erorr";
+import authRoutes from "./routes/authRoutes";
+import mealRoutes from "./routes/mealRoutes";
 dotenv.config({ path: "./.env" });
 
 // Body parser
@@ -26,7 +26,11 @@ const server = app.listen(port, () => {
 
 process.on("unhandledRejection", (err) => {
   console.log("Unahandled rejection! Shutting down...");
-  console.log(err.name, err.message);
+  if (err instanceof Error) {
+    console.log(err.name, err.message);
+  } else {
+    console.log("Unknown error", err);
+  }
   server.close(() => {
     process.exit(1);
   });

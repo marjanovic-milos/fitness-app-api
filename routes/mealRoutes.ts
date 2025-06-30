@@ -8,7 +8,7 @@ const {
   getSavedMeals,
 } = require("../controllers/mealsController");
 
-const { protect, authorize } = require("../middleware/auth");
+import { protect, authorize } from "../middleware/auth";
 const router = express.Router();
 
 // Spoonacular API routes
@@ -21,4 +21,4 @@ router.put("/updateMeal/:id", protect, authorize("admin"), updateMeal);
 router.delete("/:id", protect, authorize("admin"), deleteMeal);
 router.get("/", protect, authorize("admin"), getSavedMeals);
 
-module.exports = router;
+export default router;

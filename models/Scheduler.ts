@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const SchedulerSchema = new mongoose.Schema({
   date: {
@@ -39,4 +39,4 @@ const SchedulerSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Scheduler", SchedulerSchema);
+export default mongoose.model("Scheduler", SchedulerSchema);

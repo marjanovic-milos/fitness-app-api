@@ -1,9 +1,9 @@
-const catchAsync = require("../middleware/async");
+import catchAsync from "../middleware/async";
 const { recepiesByNutrients, recepieById } = require("../api/spoonacularApi");
-const AppError = require("../utils/appError");
-const Meal = require("../models/Meal");
+import AppError from "../utils/appError";
+import Meal from "../models/Meal";
 
-exports.mealsByNutrients = catchAsync(async (req, res, next) => {
+export const mealsByNutrients = catchAsync(async (req, res, next) => {
   const { maxCarbs, minCarbs, maxProtein, minProtein } = req.body;
 
   if (!minCarbs && !maxCarbs && !minProtein && !maxProtein) {
@@ -25,7 +25,7 @@ exports.mealsByNutrients = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.mealById = catchAsync(async (req, res, next) => {
+export const mealById = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
   if (!id) {
@@ -42,7 +42,7 @@ exports.mealById = catchAsync(async (req, res, next) => {
     data: meal,
   });
 });
-exports.addMeal = catchAsync(async (req, res, next) => {
+export const addMeal = catchAsync(async (req, res, next) => {
   const { image, spoonacularId, title, sourceUrl } = req.body;
 
   if (!image || !spoonacularId || !title || !sourceUrl) {
@@ -61,7 +61,7 @@ exports.addMeal = catchAsync(async (req, res, next) => {
     data: meal,
   });
 });
-exports.updateMeal = catchAsync(async (req, res, next) => {
+export const updateMeal = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const { title } = req.body;
 
@@ -83,7 +83,7 @@ exports.updateMeal = catchAsync(async (req, res, next) => {
     data: meal,
   });
 });
-exports.deleteMeal = catchAsync(async (req, res, next) => {
+export const deleteMeal = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
   const meal = await Meal.findByIdAndDelete(id);
@@ -95,7 +95,7 @@ exports.deleteMeal = catchAsync(async (req, res, next) => {
     data: {},
   });
 });
-exports.getSavedMeals = catchAsync(async (req, res, next) => {
+export const getSavedMeals = catchAsync(async (req, res, next) => {
   const result = await Meal.find({});
   res.status(200).json({ success: true, data: result });
 });

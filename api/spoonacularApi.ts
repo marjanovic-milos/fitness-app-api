@@ -1,4 +1,13 @@
-exports.recepiesByNutrients = async (nutrients) => {
+interface RecepiesByNutrientsParams {
+  maxCarbs?: string;
+  minCarbs?: string;
+  maxProtein?: string;
+  minProtein?: string;
+}
+
+exports.recepiesByNutrients = async (
+  nutrients: RecepiesByNutrientsParams
+): Promise<any> => {
   try {
     const { maxCarbs, minCarbs, maxProtein, minProtein } = nutrients;
 
@@ -21,7 +30,19 @@ exports.recepiesByNutrients = async (nutrients) => {
   }
 };
 
-exports.recepieById = async (id) => {
+interface Nutrients {
+  maxCarbs?: string;
+  minCarbs?: string;
+  maxProtein?: string;
+  minProtein?: string;
+}
+
+interface Recipe {
+  // Add properties as needed based on the expected response structure
+  [key: string]: any;
+}
+
+exports.recepieById = async (id: string): Promise<Recipe> => {
   try {
     const recepie = await fetch(
       `${process.env.SPOONACULAR_RECEPIES_URL}/${id}/information?apiKey=${process.env.SPOONACULAR_API_KEY}`
