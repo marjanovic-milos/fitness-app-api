@@ -7,9 +7,7 @@ export const mealsByNutrients = catchAsync(async (req, res, next) => {
   const { maxCarbs, minCarbs, maxProtein, minProtein } = req.body;
 
   if (!minCarbs && !maxCarbs && !minProtein && !maxProtein) {
-    return next(
-      new AppError("You need to set at least one of the nutrients!", 400)
-    );
+    return next(new AppError("You need to set at least one of the nutrients!", 400));
   }
 
   const response = await recepiesByNutrients({
@@ -18,14 +16,14 @@ export const mealsByNutrients = catchAsync(async (req, res, next) => {
     maxProtein,
     minProtein,
   });
-  console.log(response);
+
   res.status(201).json({
     status: "success",
     data: response,
   });
 });
 
-export const mealById = catchAsync(async (req, res, next) => {
+export const mealById = catchAsync(async (req: any, res, next) => {
   const { id } = req.params;
 
   if (!id) {
@@ -42,9 +40,10 @@ export const mealById = catchAsync(async (req, res, next) => {
     data: meal,
   });
 });
-export const addMeal = catchAsync(async (req, res, next) => {
+export const addMeal = catchAsync(async (req: any, res, next) => {
   const { image, spoonacularId, title, sourceUrl } = req.body;
 
+  const ownerId = req.user.id;
   if (!image || !spoonacularId || !title || !sourceUrl) {
     return next(new AppError("All fields are required", 400));
   }
@@ -54,6 +53,7 @@ export const addMeal = catchAsync(async (req, res, next) => {
     spoonacularId,
     title,
     sourceUrl,
+    ownerId,
   });
 
   res.status(200).json({
@@ -61,15 +61,21 @@ export const addMeal = catchAsync(async (req, res, next) => {
     data: meal,
   });
 });
-export const updateMeal = catchAsync(async (req, res, next) => {
+export const updateMeal = catchAsync(async (req: any, res, next) => {
   const { id } = req.params;
   const { title } = req.body;
+  const ownerId = req.user.id;
 
   if (!title) {
     return next(new AppError("Please provide us with name!", 400));
   }
+  const meal = await Meal.findById(id);
 
-  const meal = await Meal.findByIdAndUpdate(
+  if (meal?.ownerId !== ownerId) {
+    return next(new AppError("You can't update this meal, it doesn't belong to you!", 403));
+  }
+
+  const updatedMeal = await Meal.findByIdAndUpdate(
     id,
     { title },
     {
@@ -80,22 +86,34 @@ export const updateMeal = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: "success",
-    data: meal,
+    data: updatedMeal,
   });
 });
-export const deleteMeal = catchAsync(async (req, res, next) => {
+export const deleteMeal = catchAsync(async (req: any, res, next) => {
   const { id } = req.params;
+  const ownerId = req.user.id;
 
-  const meal = await Meal.findByIdAndDelete(id);
+  const meal = await Meal.findById(id);
+
   if (!meal) {
     return next(new AppError("There is no meal with this id!", 400));
   }
+
+  if (meal.ownerId !== ownerId) {
+    return next(new AppError("You can't delete this meal, doesn't belong to you!", 403));
+  }
+
+  await Meal.findByIdAndDelete(id);
+
   res.status(200).json({
     status: "success",
     data: {},
   });
 });
-export const getSavedMeals = catchAsync(async (req, res, next) => {
-  const result = await Meal.find({});
+
+export const getSavedMeals = catchAsync(async (req: any, res, next) => {
+  const ownerId = req.user.id;
+
+  const result = await Meal.find({ ownerId });
   res.status(200).json({ success: true, data: result });
 });

@@ -21,6 +21,10 @@ const MealSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please add a source URL"],
   },
+  ownerId: {
+    type: String,
+    required: [true, "Please add an owner Id "],
+  },
 });
 
 export default mongoose.model("Meal", MealSchema);
