@@ -16,6 +16,10 @@ const ExcerciseSchema = new mongoose.Schema({
   notes: {
     type: String,
   },
+  ownerId: {
+    type: String,
+    required: [true, "Please add an owner Id"],
+  },
 });
 
 export default mongoose.model("Excercise", ExcerciseSchema);

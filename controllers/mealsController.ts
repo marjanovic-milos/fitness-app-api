@@ -69,20 +69,12 @@ export const updateMeal = catchAsync(async (req: any, res, next) => {
   if (!title) {
     return next(new AppError("Please provide us with name!", 400));
   }
-  const meal = await Meal.findById(id);
 
-  if (meal?.ownerId !== ownerId) {
-    return next(new AppError("You can't update this meal, it doesn't belong to you!", 403));
+  const updatedMeal = await Meal.findOneAndUpdate({ _id: id, ownerId }, { title }, { new: true, runValidators: true });
+
+  if (!updatedMeal) {
+    return next(new AppError("Meal not found or you are not authorized to update it.", 404));
   }
-
-  const updatedMeal = await Meal.findByIdAndUpdate(
-    id,
-    { title },
-    {
-      new: true,
-      runValidators: true,
-    }
-  );
 
   res.status(200).json({
     status: "success",
@@ -93,17 +85,11 @@ export const deleteMeal = catchAsync(async (req: any, res, next) => {
   const { id } = req.params;
   const ownerId = req.user.id;
 
-  const meal = await Meal.findById(id);
+  const deleteMeal = await Meal.findOneAndDelete({ _id: id, ownerId });
 
-  if (!meal) {
-    return next(new AppError("There is no meal with this id!", 400));
+  if (!deleteMeal) {
+    return next(new AppError("Meal not found or you are not authorized to update it.", 404));
   }
-
-  if (meal.ownerId !== ownerId) {
-    return next(new AppError("You can't delete this meal, doesn't belong to you!", 403));
-  }
-
-  await Meal.findByIdAndDelete(id);
 
   res.status(200).json({
     status: "success",

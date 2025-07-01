@@ -5,6 +5,7 @@ const port = process.env.PORT || 3000;
 import errorHandler from "./middleware/erorr";
 import authRoutes from "./routes/authRoutes";
 import mealRoutes from "./routes/mealRoutes";
+import excerciseRoutes from "./routes/excerciseRoutes";
 dotenv.config({ path: "./.env" });
 
 // Body parser
@@ -17,6 +18,7 @@ app.use(errorHandler);
 //assign routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/meal", mealRoutes);
+app.use("/api/v1/excercise", excerciseRoutes);
 
 connectDB();
 
