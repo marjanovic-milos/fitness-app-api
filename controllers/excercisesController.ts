@@ -9,9 +9,12 @@ export const getAllExcercises = catchAsync(async (req: any, res, next) => {
 
   res.status(200).json({ success: true, data: excercises });
 });
-export const addExcercise = catchAsync(async (req: any, res, next) => {
+export const addExcercise = catchAsync(async (req, res, next) => {
   const { name, video, notes } = req.body;
 
+  if (!req.user || !req.user.id) {
+    return next(new AppError("User not authenticated", 401));
+  }
   const ownerId = req.user.id;
 
   if (!name || !video || !notes) {

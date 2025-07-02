@@ -7,7 +7,9 @@ export const mealsByNutrients = catchAsync(async (req, res, next) => {
   const { maxCarbs, minCarbs, maxProtein, minProtein } = req.body;
 
   if (!minCarbs && !maxCarbs && !minProtein && !maxProtein) {
-    return next(new AppError("You need to set at least one of the nutrients!", 400));
+    return next(
+      new AppError("You need to set at least one of the nutrients!", 400)
+    );
   }
 
   const response = await recepiesByNutrients({
@@ -23,7 +25,7 @@ export const mealsByNutrients = catchAsync(async (req, res, next) => {
   });
 });
 
-export const mealById = catchAsync(async (req: any, res, next) => {
+export const mealById = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
   if (!id) {
@@ -40,9 +42,12 @@ export const mealById = catchAsync(async (req: any, res, next) => {
     data: meal,
   });
 });
-export const addMeal = catchAsync(async (req: any, res, next) => {
+export const addMeal = catchAsync(async (req, res, next) => {
   const { image, spoonacularId, title, sourceUrl } = req.body;
 
+  if (!req.user || !req.user.id) {
+    return next(new AppError("User not authenticated", 401));
+  }
   const ownerId = req.user.id;
   if (!image || !spoonacularId || !title || !sourceUrl) {
     return next(new AppError("All fields are required", 400));
@@ -61,19 +66,32 @@ export const addMeal = catchAsync(async (req: any, res, next) => {
     data: meal,
   });
 });
-export const updateMeal = catchAsync(async (req: any, res, next) => {
+export const updateMeal = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const { title } = req.body;
+
+  if (!req.user || !req.user.id) {
+    return next(new AppError("User not authenticated", 401));
+  }
   const ownerId = req.user.id;
 
   if (!title) {
     return next(new AppError("Please provide us with name!", 400));
   }
 
-  const updatedMeal = await Meal.findOneAndUpdate({ _id: id, ownerId }, { title }, { new: true, runValidators: true });
+  const updatedMeal = await Meal.findOneAndUpdate(
+    { _id: id, ownerId },
+    { title },
+    { new: true, runValidators: true }
+  );
 
   if (!updatedMeal) {
-    return next(new AppError("Meal not found or you are not authorized to update it.", 404));
+    return next(
+      new AppError(
+        "Meal not found or you are not authorized to update it.",
+        404
+      )
+    );
   }
 
   res.status(200).json({
@@ -81,14 +99,22 @@ export const updateMeal = catchAsync(async (req: any, res, next) => {
     data: updatedMeal,
   });
 });
-export const deleteMeal = catchAsync(async (req: any, res, next) => {
+export const deleteMeal = catchAsync(async (req, res, next) => {
   const { id } = req.params;
+  if (!req.user || !req.user.id) {
+    return next(new AppError("User not authenticated", 401));
+  }
   const ownerId = req.user.id;
 
   const deleteMeal = await Meal.findOneAndDelete({ _id: id, ownerId });
 
   if (!deleteMeal) {
-    return next(new AppError("Meal not found or you are not authorized to update it.", 404));
+    return next(
+      new AppError(
+        "Meal not found or you are not authorized to update it.",
+        404
+      )
+    );
   }
 
   res.status(200).json({
@@ -97,7 +123,10 @@ export const deleteMeal = catchAsync(async (req: any, res, next) => {
   });
 });
 
-export const getSavedMeals = catchAsync(async (req: any, res, next) => {
+export const getSavedMeals = catchAsync(async (req, res, next) => {
+  if (!req.user || !req.user.id) {
+    return next(new AppError("User not authenticated", 401));
+  }
   const ownerId = req.user.id;
 
   const result = await Meal.find({ ownerId });
