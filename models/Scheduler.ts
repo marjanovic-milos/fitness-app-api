@@ -6,34 +6,25 @@ const SchedulerSchema = new mongoose.Schema({
     required: true,
     default: Date.now(),
   },
-  user: {
-    type: mongoose.Schema.ObjectId,
-    ref: "User",
+  client: {
+    type: String,
     required: true,
   },
-  mealPlan: {
-    type: mongoose.Schema.ObjectId,
-    ref: "MealPlan",
-    required: true,
+  trainer: {
+    type: String,
+    required: false,
   },
-  trainingPlan: {
-    type: mongoose.Schema.ObjectId,
-    ref: "TrainingPlan",
-    required: true,
-  },
+
   status: {
     type: Boolean,
     default: false,
   },
-  entity: {
-    type: String,
-    required: false,
-  },
+
   mealPlans: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: "Meals",
   },
-  Excercises: {
+  excercisePlans: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: "Excercise",
   },
