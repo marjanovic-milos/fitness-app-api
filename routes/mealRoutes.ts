@@ -12,7 +12,7 @@ import { protect, authorize } from "../middleware/auth";
 const router = express.Router();
 
 // Spoonacular API routes
-router.get("/:id", protect, authorize("admin"), mealById);
+router.get("/mealDetails/:id", protect, authorize("admin"), mealById);
 router.post("/byNutrients", protect, authorize("admin"), mealsByNutrients);
 
 // Database routes

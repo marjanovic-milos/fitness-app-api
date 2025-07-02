@@ -3,6 +3,9 @@ import AppError from "../utils/appError";
 import Excercise from "../models/Excercise";
 import { Request, Response, NextFunction } from "express";
 
+// @desc    Gets All Excercises
+// @access  Private
+// @route   GET /api/v1/excercise/excercises
 export const getAllExcercises = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     if (!req.user || !req.user.id) {
@@ -14,6 +17,10 @@ export const getAllExcercises = catchAsync(
     res.status(200).json({ success: true, data: excercises });
   }
 );
+
+// @desc    Add new Excercise
+// @access  Private
+// @route   POST /api/v1/excercise/addExcercise
 export const addExcercise = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { name, video, notes } = req.body;
@@ -40,6 +47,10 @@ export const addExcercise = catchAsync(
     });
   }
 );
+
+// @desc    Update Excercise
+// @access  Private
+// @route   PUT /api/v1/excercise/updateExcercise
 export const updateExcercise = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
@@ -70,6 +81,10 @@ export const updateExcercise = catchAsync(
     });
   }
 );
+
+// @desc    Delete Excercise
+// @access  Private
+// @route   DELETE /api/v1/excercise/deleteExcercise
 
 export const deleteExcercise = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {

@@ -17,7 +17,7 @@ app.use(errorHandler);
 
 //assign routes
 app.use("/api/v1/auth", authRoutes);
-app.use("/api/v1/meal", mealRoutes);
+app.use("/api/v1/meals", mealRoutes);
 app.use("/api/v1/excercise", excerciseRoutes);
 
 connectDB();

@@ -4,6 +4,10 @@ import AppError from "../utils/appError";
 import Meal from "../models/Meal";
 import { Request, Response, NextFunction } from "express";
 
+// @desc    Find meals by nutrients from Spoonacular API
+// @access  Private
+// @route   POST /api/v1/meals/byNutrients
+
 export const mealsByNutrients = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { maxCarbs, minCarbs, maxProtein, minProtein } = req.body;
@@ -27,7 +31,9 @@ export const mealsByNutrients = catchAsync(
     });
   }
 );
-
+// @desc    Find meal detail by id from Spoonacular API
+// @access  Private
+// @route   GET /api/v1/meals/mealDetails/:id
 export const mealById = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
@@ -48,6 +54,9 @@ export const mealById = catchAsync(
   }
 );
 
+// @desc    Get all saved meals
+// @access  Private
+// @route   GET /api/v1/meals
 export const getSavedMeals = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     if (!req.user || !req.user.id) {
@@ -59,6 +68,10 @@ export const getSavedMeals = catchAsync(
     res.status(200).json({ success: true, data: result });
   }
 );
+
+// @desc    Add a new meal
+// @access  Private
+// @route   POST /api/v1/meals/addMeal
 export const addMeal = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { image, spoonacularId, title, sourceUrl } = req.body;
@@ -85,6 +98,10 @@ export const addMeal = catchAsync(
     });
   }
 );
+
+// @desc    Update a meal
+// @access  Private
+// @route   PUT /api/v1/meals/updateMeal/:id
 export const updateMeal = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
@@ -119,6 +136,9 @@ export const updateMeal = catchAsync(
     });
   }
 );
+// @desc    Delete a meal
+// @access  Private
+// @route   DELETE /api/v1/meals/:id
 export const deleteMeal = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;

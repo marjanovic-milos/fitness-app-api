@@ -44,6 +44,10 @@ const createSendToken = (
     },
   });
 };
+
+// @desc    Sugnup a new user
+// @route   POST /api/v1/auth/signup
+// @access  Public
 export const signup = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { name, email, password, role } = req.body;
@@ -58,6 +62,9 @@ export const signup = catchAsync(
   }
 );
 
+// @desc    Login a new user
+// @route   POST /api/v1/auth/login
+// @access  Public
 export const login = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
@@ -75,7 +82,9 @@ export const login = catchAsync(
     createSendToken(user, 200, req, res);
   }
 );
-
+// @desc    Logout user
+// @route   POST /api/v1/auth/logout
+// @access  Public
 export const logout = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     res.cookie("token", "node", {
@@ -89,6 +98,10 @@ export const logout = catchAsync(
     });
   }
 );
+
+// @desc    GET current user
+// @route   GET /api/v1/auth/getMe
+// @access  Private
 
 export const getMe = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
