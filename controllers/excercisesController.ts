@@ -2,7 +2,7 @@ import catchAsync from "../middleware/async";
 import AppError from "../utils/appError";
 import Excercise from "../models/Excercise";
 import { Request, Response, NextFunction } from "express";
-
+// import APIFeatures from "../utils/apiFeatures";
 // @desc    Gets All Excercises
 // @access  Private
 // @route   GET /api/v1/excercise/excercises
@@ -11,7 +11,7 @@ export const getAllExcercises = catchAsync(
     if (!req.user || !req.user.id) {
       return next(new AppError("User not authenticated", 401));
     }
-    const ownerId = req.user.id;
+    const ownerId = req?.user?.id;
     const excercises = await Excercise.find({ ownerId });
 
     res.status(200).json({ success: true, data: excercises });
@@ -72,7 +72,6 @@ export const updateExcercise = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const { name, video, notes } = req.body;
-    console.log(req?.user?.id, "rEQ.USER");
 
     const ownerId = req?.user?.id;
 
