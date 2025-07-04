@@ -18,6 +18,23 @@ export const getAllExcercises = catchAsync(
   }
 );
 
+// @desc    Gets One Excercise by ID
+// @access  Private
+// @route   GET /api/v1/excercise/:excerciseId
+export const getExcerciseById = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user || !req.user.id) {
+      return next(new AppError("User not authenticated", 401));
+    }
+    // const ownerId = req.user.id;
+
+    const { excerciseId } = req.params;
+    const excercise = await Excercise.findById(excerciseId);
+
+    res.status(200).json({ success: true, data: excercise });
+  }
+);
+
 // @desc    Add new Excercise
 // @access  Private
 // @route   POST /api/v1/excercise/addExcercise
@@ -55,14 +72,12 @@ export const updateExcercise = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const { name, video, notes } = req.body;
+    console.log(req?.user?.id, "rEQ.USER");
 
-    if (!req.user || !req.user.id) {
-      return next(new AppError("User not authenticated", 401));
-    }
-    const ownerId = req.user.id;
+    const ownerId = req?.user?.id;
 
     const updatedExcercise = await Excercise.findOneAndUpdate(
-      { _id: id, ownerId },
+      { id: id, ownerId },
       { name, video, notes },
       { new: true, runValidators: true }
     );
@@ -77,7 +92,7 @@ export const updateExcercise = catchAsync(
     }
     res.status(200).json({
       status: "success",
-      data: {},
+      data: updatedExcercise,
     });
   }
 );
@@ -96,7 +111,7 @@ export const deleteExcercise = catchAsync(
     const ownerId = req.user.id;
 
     const deleteExcercise = await Excercise.findOneAndDelete({
-      _id: id,
+      id,
       ownerId,
     });
 
