@@ -1,33 +1,49 @@
 import mongoose from "mongoose";
 
-const SchedulerSchema = new mongoose.Schema({
-  date: {
-    type: Date,
-    required: true,
-    default: Date.now(),
-  },
-  client: {
-    type: String,
-    required: true,
-  },
-  trainer: {
-    type: String,
-    required: false,
-  },
+const SchedulerSchema = new mongoose.Schema(
+  {
+    date: {
+      type: Date,
+      required: true,
+      default: Date.now(),
+    },
+    client: {
+      type: String,
+      required: true,
+    },
+    trainer: {
+      type: String,
+      required: false,
+    },
 
-  status: {
-    type: Boolean,
-    default: false,
-  },
+    status: {
+      type: Boolean,
+      default: false,
+    },
 
-  mealPlans: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "Meals",
+    mealPlans: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Meals",
+    },
+    excercisePlans: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Excercise",
+    },
   },
-  excercisePlans: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "Excercise",
-  },
-});
+  {
+    toJSON: {
+      transform(doc, ret) {
+        delete ret.__v;
+        return ret;
+      },
+    },
+    toObject: {
+      transform(doc, ret) {
+        delete ret.__v;
+        return ret;
+      },
+    },
+  }
+);
 
 export default mongoose.model("Scheduler", SchedulerSchema);
