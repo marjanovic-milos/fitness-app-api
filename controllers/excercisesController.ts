@@ -33,7 +33,6 @@ export const getExcerciseById = catchAsync(
     if (!req.user || !req.user.id) {
       return next(new AppError("User not authenticated", 401));
     }
-    // const ownerId = req.user.id;
 
     const { excerciseId } = req.params;
     const excercise = await Excercise.findById(excerciseId);

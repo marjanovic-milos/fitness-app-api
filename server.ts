@@ -2,11 +2,13 @@ import express from "express";
 const app = express();
 import dotenv from "dotenv";
 const port = process.env.PORT || 3000;
+
 import errorHandler from "./middleware/erorr";
 import authRoutes from "./routes/authRoutes";
 import mealRoutes from "./routes/mealRoutes";
 import excerciseRoutes from "./routes/excerciseRoutes";
 import userRoutes from "./routes/userRoutes";
+import schedulerRoutes from "./routes/schedulerRoutes";
 dotenv.config({ path: "./.env" });
 
 // Body parser
@@ -21,6 +23,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/meals", mealRoutes);
 app.use("/api/v1/excercises", excerciseRoutes);
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/scheduler", schedulerRoutes);
 
 connectDB();
 
