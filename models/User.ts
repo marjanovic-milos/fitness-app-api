@@ -11,7 +11,14 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please add an email"],
     unique: true,
-    match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, "Please add a valid email"],
+    match: [
+      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+      "Please add a valid email",
+    ],
+  },
+  assignedTrainner: {
+    type: String,
+    required: [true, "Please add an assigned trainner"],
   },
   role: {
     type: String,
@@ -37,10 +44,17 @@ export interface IUser extends Document {
   email: string;
   role: "user" | "admin";
   password: string;
-  correctPassword(candidatePassword: string, userPassword: string): Promise<boolean>;
+  correctPassword(
+    candidatePassword: string,
+    userPassword: string
+  ): Promise<boolean>;
 }
 
-UserSchema.methods.correctPassword = async function (this: IUser, candidatePassword: string, userPassword: string): Promise<boolean> {
+UserSchema.methods.correctPassword = async function (
+  this: IUser,
+  candidatePassword: string,
+  userPassword: string
+): Promise<boolean> {
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 export default mongoose.model("User", UserSchema);

@@ -6,6 +6,7 @@ import errorHandler from "./middleware/erorr";
 import authRoutes from "./routes/authRoutes";
 import mealRoutes from "./routes/mealRoutes";
 import excerciseRoutes from "./routes/excerciseRoutes";
+import userRoutes from "./routes/userRoutes";
 dotenv.config({ path: "./.env" });
 
 // Body parser
@@ -19,6 +20,7 @@ app.use(errorHandler);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/meals", mealRoutes);
 app.use("/api/v1/excercises", excerciseRoutes);
+app.use("/api/v1/users", userRoutes);
 
 connectDB();
 

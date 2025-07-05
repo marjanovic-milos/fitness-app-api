@@ -50,12 +50,13 @@ const createSendToken = (
 // @access  Public
 export const signup = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, assignedTrainner } = req.body;
     const user: any = await User.create({
       name,
       email,
       password,
       role,
+      assignedTrainner,
     });
 
     createSendToken(user, 200, req, res);
