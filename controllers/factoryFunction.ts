@@ -14,13 +14,13 @@ export const deleteOne = (Model: any) =>
     const { id } = req.params;
     const ownerId = req?.user?.id;
 
-    const deleteDocument = await Model.findOneAndDelete({
+    const doc = await Model.findOneAndDelete({
       _id: id,
       ownerId,
     });
 
-    if (!deleteDocument) {
-      return next(new AppError("Document not found or you are not authorized to update it.", 403));
+    if (!doc) {
+      return next(new AppError("Document not found with that ID", 404));
     }
 
     res.status(200).json({
@@ -29,23 +29,23 @@ export const deleteOne = (Model: any) =>
     });
   });
 
-export const updateOne = (Model: any) => async (req: Request, res: Response, next: NextFunction) => {
-  const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+export const updateOne = (Model: any) =>
+  catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
 
-  if (!doc) {
-    return next(new AppError("No document found with that ID", 404));
-  }
+    const ownerId = req?.user?.id;
 
-  return res.status(200).json({
-    status: "success",
-    data: {
+    const doc = await Model.findOneAndUpdate({ _id: id, ownerId }, req.body, { new: true, runValidators: true });
+
+    if (!doc) {
+      return next(new AppError("Document not found with that ID", 404));
+    }
+
+    res.status(200).json({
+      status: "success",
       data: doc,
-    },
+    });
   });
-};
 
 export const createOne = (Model: any) => async (req: Request, res: Response, next: NextFunction) => {
   const doc = await Model.create(req.body);

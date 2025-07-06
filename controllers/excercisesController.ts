@@ -4,7 +4,7 @@ import AppError from "../utils/appError";
 import Excercise from "../models/Excercise";
 import { Request, Response, NextFunction } from "express";
 import APIFeatures from "../utils/apiFeatures";
-import { deleteOne } from "./factoryFunction";
+import { deleteOne, updateOne } from "./factoryFunction";
 // @desc    Gets All Excercises
 // @access  Private
 // @route   GET /api/v1/excercise/excercises
@@ -66,22 +66,8 @@ export const addExcercise = catchAsync(async (req: Request, res: Response, next:
 // @desc    Update Excercise
 // @access  Private
 // @route   PUT /api/v1/excercise/updateExcercise
-export const updateExcercise = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { id } = req.params;
-  const { name, video, notes } = req.body;
 
-  const ownerId = req?.user?.id;
-
-  const updatedExcercise = await Excercise.findOneAndUpdate({ id: id, ownerId }, { name, video, notes }, { new: true, runValidators: true });
-
-  if (!updatedExcercise) {
-    return next(new AppError("Excercise not found or you are not authorized to update it.", 404));
-  }
-  res.status(200).json({
-    status: "success",
-    data: updatedExcercise,
-  });
-});
+export const updateExcercise = updateOne(Excercise);
 
 // @desc    Delete Excercise
 // @access  Private

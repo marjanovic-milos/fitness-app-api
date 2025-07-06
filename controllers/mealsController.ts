@@ -4,7 +4,7 @@ import AppError from "../utils/appError";
 import Meal from "../models/Meal";
 import { Request, Response, NextFunction } from "express";
 import APIFeatures from "../utils/apiFeatures";
-import { deleteOne } from "./factoryFunction";
+import { deleteOne, updateOne } from "./factoryFunction";
 // @desc    Find meals by nutrients from Spoonacular API
 // @access  Private
 // @route   POST /api/v1/meals/byNutrients
@@ -96,58 +96,11 @@ export const addMeal = catchAsync(async (req: Request, res: Response, next: Next
 // @desc    Update a meal
 // @access  Private
 // @route   PUT /api/v1/meals/updateMeal/:id
-export const updateMeal = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { id } = req.params;
-  const { title } = req.body;
 
-  if (!req.user || !req.user.id) {
-    return next(new AppError("User not authenticated", 401));
-  }
-  const ownerId = req.user.id;
-  if (!title) {
-    return next(new AppError("Please provide us with name!", 400));
-  }
+export const updateMeal = updateOne(Meal);
 
-  const updatedMeal = await Meal.findOneAndUpdate({ _id: id, ownerId }, { title }, { new: true, runValidators: true });
-
-  if (!updatedMeal) {
-    return next(new AppError("Meal not found or you are not authorized to update it.", 404));
-  }
-
-  res.status(200).json({
-    status: "success",
-    data: updatedMeal,
-  });
-});
 // @desc    Delete a meal
 // @access  Private
 // @route   DELETE /api/v1/meals/:id
 
 export const deleteMeal = deleteOne(Meal);
-
-// export const deleteMeal = catchAsync(
-//   async (req: Request, res: Response, next: NextFunction) => {
-//     const { id } = req.params;
-
-//     if (!req.user || !req.user.id) {
-//       return next(new AppError("User not authenticated", 401));
-//     }
-//     const ownerId = req.user.id;
-
-//     const deleteMeal = await Meal.findOneAndDelete({ _id: id, ownerId });
-
-//     if (!deleteMeal) {
-//       return next(
-//         new AppError(
-//           "Meal not found or you are not authorized to update it.",
-//           404
-//         )
-//       );
-//     }
-
-//     res.status(200).json({
-//       status: "success",
-//       data: {},
-//     });
-//   }
-// );

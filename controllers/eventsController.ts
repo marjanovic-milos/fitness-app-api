@@ -4,7 +4,7 @@ import Event from "../models/Event";
 import AppError from "../utils/appError";
 import { Request, Response, NextFunction } from "express";
 import APIFeatures from "../utils/apiFeatures";
-import { deleteOne } from "./factoryFunction";
+import { deleteOne, updateOne } from "./factoryFunction";
 // @desc    You can get all the events for trainer, owner id.
 // @access  Private
 // @route   GET /api/v1/Event/trainerEvents
@@ -86,22 +86,7 @@ export const getClientEvents = catchAsync(async (req: Request, res: Response, ne
 // @access  Private
 // @route   PUT /api/v1/events/updateEvent/:id
 
-export const updateEvent = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { id } = req.params;
-  const { client, mealPlans, excercisePlans } = req.body;
-
-  const trainer = req?.user?.id;
-
-  const updatedEvent = await Event.findOneAndUpdate({ _id: id, trainer }, { client, mealPlans, excercisePlans }, { new: true, runValidators: true });
-
-  if (!updatedEvent) {
-    return next(new AppError("Event not found or you are not authorized to update it.", 403));
-  }
-  res.status(200).json({
-    status: "success",
-    data: updatedEvent,
-  });
-});
+export const updateEvent = updateOne(Event);
 
 // @desc    Delete a event
 // @access  Private
