@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const SchedulerSchema = new mongoose.Schema(
+const EventSchema = new mongoose.Schema(
   {
     date: {
       type: Date,
@@ -45,4 +45,4 @@ const SchedulerSchema = new mongoose.Schema(
   }
 );
 
-export default mongoose.model("Scheduler", SchedulerSchema);
+export default mongoose.model("Event", EventSchema);

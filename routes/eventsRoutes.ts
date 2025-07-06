@@ -1,5 +1,12 @@
 import express from "express";
-const { getTrainerEvents, createEvent, getEvent, getClientEvents, updateEvent, deleteEvent } = require("../controllers/schedulerController");
+const {
+  getTrainerEvents,
+  createEvent,
+  getEvent,
+  getClientEvents,
+  updateEvent,
+  deleteEvent,
+} = require("../controllers/eventsController");
 import { protect, authorize } from "../middleware/auth";
 
 const router = express.Router();

@@ -41,8 +41,6 @@ export const getUser = catchAsync(
     const { id } = req.params;
     const user = await User.findById(id);
 
-    console.log(user, "User");
-
     if (!user || user.assignedTrainner !== ownerId) {
       return next(
         new AppError("User not found or you are not authorized to see it.", 404)
