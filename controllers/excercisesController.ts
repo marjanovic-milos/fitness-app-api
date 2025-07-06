@@ -3,6 +3,7 @@ import AppError from "../utils/appError";
 import Excercise from "../models/Excercise";
 import { Request, Response, NextFunction } from "express";
 import APIFeatures from "../utils/apiFeatures";
+import { deleteOne } from "./factoryFunction";
 // @desc    Gets All Excercises
 // @access  Private
 // @route   GET /api/v1/excercise/excercises

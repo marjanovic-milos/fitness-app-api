@@ -13,7 +13,7 @@ interface IUser {
 declare global {
   namespace Express {
     interface Request {
-      user: IUser | undefined;
+      user?: IUser | undefined;
     }
   }
 }
