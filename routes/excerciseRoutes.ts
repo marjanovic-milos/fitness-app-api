@@ -1,11 +1,5 @@
 const express = require("express");
-const {
-  getAllExcercises,
-  addExcercise,
-  updateExcercise,
-  deleteExcercise,
-  getExcerciseById,
-} = require("../controllers/excercisesController");
+const { getAllExcercises, addExcercise, updateExcercise, deleteExcercise, getExcerciseById } = require("../controllers/excercisesController");
 
 import { protect, authorize } from "../middleware/auth";
 const router = express.Router();

@@ -10,7 +10,7 @@ const EventSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    trainer: {
+    ownerId: {
       type: String,
       required: false,
     },

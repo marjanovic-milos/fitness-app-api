@@ -4,8 +4,6 @@ interface AsyncHandler {
   (fn: RequestHandler): RequestHandler;
 }
 
-const asyncHandler: AsyncHandler =
-  (fn) => (req: Request, res: Response, next: NextFunction) =>
-    Promise.resolve(fn(req, res, next)).catch(next);
+const asyncHandler: AsyncHandler = (fn) => (req: Request, res: Response, next: NextFunction) => Promise.resolve(fn(req, res, next)).catch(next);
 
 export default asyncHandler;
