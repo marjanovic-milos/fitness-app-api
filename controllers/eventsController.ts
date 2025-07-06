@@ -5,7 +5,7 @@ import AppError from "../utils/appError";
 import { Request, Response, NextFunction } from "express";
 import APIFeatures from "../utils/apiFeatures";
 
-// @desc    You can get all the events for admin, owner id.
+// @desc    You can get all the events for trainer, owner id.
 // @access  Private
 // @route   GET /api/v1/Event/trainerEvents
 
@@ -28,7 +28,7 @@ export const getTrainerEvents = catchAsync(
   }
 );
 
-// @desc    You can get a events on event for admin, owner id.
+// @desc    You can get a events on event for trainer, owner id.
 // @access  Private
 // @route   GET /api/v1/events/trainerSchedule/:id
 export const getEventByTrainer = catchAsync(
@@ -75,7 +75,7 @@ export const createEvent = catchAsync(
   }
 );
 
-// @desc    You can get all the events on event for admin, cient id.
+// @desc    You can get all the events on event for trainer, cient id.
 // @access  Private
 // @route   GET /api/v1/events/getAllEvents
 
@@ -98,7 +98,7 @@ export const getClientEvents = catchAsync(
   }
 );
 
-// @desc    Update event, as admin
+// @desc    Update event as trainer
 // @access  Private
 // @route   PUT /api/v1/events/updateEvent/:id
 

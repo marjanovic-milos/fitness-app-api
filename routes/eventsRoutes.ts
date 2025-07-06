@@ -11,12 +11,12 @@ import { protect, authorize } from "../middleware/auth";
 
 const router = express.Router();
 
-router.get("/trainerEvents", protect, authorize("admin"), getTrainerEvents);
-router.get("/clientEvents", protect, authorize("user"), getClientEvents);
+router.get("/trainerEvents", protect, authorize("trainer"), getTrainerEvents);
+router.get("/clientEvents", protect, authorize("client"), getClientEvents);
 
-router.post("/createEvent", protect, authorize("admin"), createEvent);
-router.put("/:id", protect, authorize("admin"), updateEvent);
-router.delete("/:id", protect, authorize("admin"), deleteEvent);
+router.post("/createEvent", protect, authorize("trainer"), createEvent);
+router.put("/:id", protect, authorize("trainer"), updateEvent);
+router.delete("/:id", protect, authorize("trainer"), deleteEvent);
 router.get("/:id", protect, getEvent);
 
 export default router;

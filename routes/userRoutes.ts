@@ -8,8 +8,8 @@ const {
 import { protect, authorize } from "../middleware/auth";
 const router = express.Router();
 
-router.get("/trainers", protect, authorize("admin"), getAllTrainers);
-router.get("/:id", protect, authorize("admin"), getUser);
-router.get("/", protect, authorize("admin"), getUsers);
+router.get("/trainers", protect, authorize("trainer"), getAllTrainers);
+router.get("/:id", protect, authorize("trainer"), getUser);
+router.get("/", protect, authorize("trainer"), getUsers);
 
 export default router;

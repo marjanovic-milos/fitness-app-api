@@ -60,7 +60,7 @@ export const getAllTrainers = catchAsync(
       return next(new AppError("User not authenticated", 401));
     }
 
-    const trainers = new APIFeatures(User.find({ role: "admin" }), req.query)
+    const trainers = new APIFeatures(User.find({ role: "trainer" }), req.query)
       .filter()
       .limitFields()
       .sort()

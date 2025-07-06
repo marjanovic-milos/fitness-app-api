@@ -23,8 +23,8 @@ const UserSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["user", "admin"],
-      default: "user",
+      enum: ["client", "trainer"],
+      default: "client",
     },
     password: {
       type: String,
@@ -59,7 +59,7 @@ UserSchema.pre("save", async function (next) {
 export interface IUser extends Document {
   name: string;
   email: string;
-  role: "user" | "admin";
+  role: "client" | "trainer";
   password: string;
   correctPassword(
     candidatePassword: string,
