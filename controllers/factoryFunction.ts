@@ -35,7 +35,10 @@ export const updateOne = (Model: any) =>
 
     const ownerId = req?.user?.id;
 
-    const doc = await Model.findOneAndUpdate({ _id: id, ownerId }, req.body, { new: true, runValidators: true });
+    const doc = await Model.findOneAndUpdate({ _id: id, ownerId }, req.body, {
+      new: true,
+      runValidators: true,
+    });
 
     if (!doc) {
       return next(new AppError("Document not found with that ID", 404));
@@ -47,53 +50,49 @@ export const updateOne = (Model: any) =>
     });
   });
 
-export const createOne = (Model: any) => async (req: Request, res: Response, next: NextFunction) => {
-  const doc = await Model.create(req.body);
+export const createOne = (Model: any) =>
+  catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const ownerId = req?.user?.id;
 
-  return res.status(201).json({
-    status: "success",
-    data: {
-      data: doc,
-    },
-  });
-};
+    const doc = await Model.create({ ...req.body, ownerId });
 
-export const getOne = (Model: any, popOptions?: GetOnePopOptions | string) => async (req: Request, res: Response, next: NextFunction) => {
-  let query = Model.findById(req.params.id);
-  if (popOptions) {
-    if (typeof popOptions === "string") {
-      query = query.populate({ path: popOptions });
-    } else {
-      query = query.populate(popOptions);
+    if (!doc) {
+      return next(new AppError("Document not found with that ID", 404));
     }
-  }
-  const doc = await query;
 
-  if (!doc) {
-    return next(new AppError("No document found with that ID", 404));
-  }
-
-  return res.status(200).json({
-    status: "success",
-    data: {
+    res.status(200).json({
+      status: "success",
       data: doc,
-    },
+    });
   });
-};
 
-export const getAll = (Model: any) => async (req: Request, res: Response, next: NextFunction) => {
-  let filter = {};
-  if (req.params.tourId) filter = { tour: req.params.tourId };
+export const getOne = (Model: any, popOptions?: GetOnePopOptions | string) =>
+  catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const ownerId = req?.user?.id;
+    const excercise = await Model.find({ _id: id, ownerId });
 
-  const features = new APIFeatures(Model.find(filter), req.query).filter().sort().limitFields().paginate();
-
-  const doc = await features.query;
-
-  return res.status(200).json({
-    status: "success",
-    results: doc.length,
-    data: {
-      data: doc,
-    },
+    res.status(200).json({ success: true, data: excercise });
   });
-};
+
+export const getAll =
+  (Model: any) => async (req: Request, res: Response, next: NextFunction) => {
+    let filter = {};
+    if (req.params.tourId) filter = { tour: req.params.tourId };
+
+    const features = new APIFeatures(Model.find(filter), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+
+    const doc = await features.query;
+
+    return res.status(200).json({
+      status: "success",
+      results: doc.length,
+      data: {
+        data: doc,
+      },
+    });
+  };
