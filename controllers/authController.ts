@@ -22,7 +22,12 @@ const signToken = (id: string) => {
   });
 };
 
-const createSendToken = (user: IUser, statusCode: number, req: Request, res: Response): void => {
+const createSendToken = (
+  user: IUser,
+  statusCode: number,
+  req: Request,
+  res: Response
+): void => {
   const token = signToken(user.id.toString());
 
   res.cookie("jwt", token, {
@@ -45,62 +50,43 @@ const createSendToken = (user: IUser, statusCode: number, req: Request, res: Res
 // @desc    Sugnup a new user
 // @route   POST /api/v1/auth/signup
 // @access  Public
-// export const signup = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-//   const { name, email, password, role, assignedTrainner } = req.body;
-//   const user: any = await User.create({
-//     name,
-//     email,
-//     password,
-//     role,
-//     assignedTrainner,
-//   });
-
-//   createSendToken(user, 200, req, res);
-// });
-
 export const signup = createOne(User);
 
 // @desc    Login a new user
 // @route   POST /api/v1/auth/login
 // @access  Public
-export const login = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { email, password } = req.body;
+export const login = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password } = req.body;
 
-  const user: any = await User.findOne({ email }).select("+password");
+    const user: any = await User.findOne({ email }).select("+password");
 
-  if (!user || !(await user.correctPassword?.(password, user.password!))) {
-    return next(new AppError("Incorrect email or password", 401));
+    if (!user || !(await user.correctPassword?.(password, user.password!))) {
+      return next(new AppError("Incorrect email or password", 401));
+    }
+
+    createSendToken(user, 200, req, res);
   }
-
-  createSendToken(user, 200, req, res);
-});
+);
 // @desc    Logout user
 // @route   POST /api/v1/auth/logout
 // @access  Public
-export const logout = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  res.cookie("token", "node", {
-    expires: new Date(Date.now() + 10 * 1000),
-    httpOnly: true,
-  });
+export const logout = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    res.cookie("token", "node", {
+      expires: new Date(Date.now() + 10 * 1000),
+      httpOnly: true,
+    });
 
-  res.status(200).json({
-    success: true,
-    data: {},
-  });
-});
+    res.status(200).json({
+      success: true,
+      data: {},
+    });
+  }
+);
 
 // @desc    GET current user
 // @route   GET /api/v1/auth/getMe
 // @access  Private
 
 export const getMe = getOne(User);
-
-// export const getMe = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-//   const userId = req?.user?.id;
-//   const user = userId ? (await User.findById(userId)) || null : null;
-
-//   res.status(200).json({
-//     success: true,
-//     data: user,
-//   });
-// });
