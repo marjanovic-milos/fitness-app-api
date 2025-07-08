@@ -9,18 +9,19 @@ import mealRoutes from "./routes/mealRoutes";
 import excerciseRoutes from "./routes/excerciseRoutes";
 import userRoutes from "./routes/userRoutes";
 import eventsRoutes from "./routes/eventsRoutes";
-import mongoSanitize from "express-mongo-sanitize";
+// import mongoSanitize from "express-mongo-sanitize";
+// const xssClean = require("xss-clean");
 
 import hpp from "hpp";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import cors from "cors";
+import { createApolloServer } from "./apolloServer";
 
-const xssClean = require("xss-clean");
 dotenv.config({ path: "./.env" });
 
-app.use(mongoSanitize());
-app.use(xssClean());
+// app.use(mongoSanitize());
+// app.use(xssClean());
 app.use(helmet());
 
 const limiter = rateLimit({
@@ -31,7 +32,8 @@ const limiter = rateLimit({
 app.use(hpp());
 
 app.use(cors());
-
+//@ts-ignore
+app.use(createApolloServer());
 app.use(limiter);
 
 // Body parser
