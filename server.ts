@@ -10,12 +10,13 @@ import excerciseRoutes from "./routes/excerciseRoutes";
 import userRoutes from "./routes/userRoutes";
 import eventsRoutes from "./routes/eventsRoutes";
 import mongoSanitize from "express-mongo-sanitize";
-import xssClean from "xss-clean";
-import cors from "cors";
-import rateLimit from "express-rate-limit";
-import helmet from "helmet";
-import hpp from "hpp";
 
+import hpp from "hpp";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
+import cors from "cors";
+
+const xssClean = require("xss-clean");
 dotenv.config({ path: "./.env" });
 
 app.use(mongoSanitize());
