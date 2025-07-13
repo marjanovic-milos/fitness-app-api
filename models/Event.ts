@@ -22,7 +22,7 @@ const EventSchema = new mongoose.Schema(
 
     mealPlans: {
       type: [mongoose.Schema.Types.ObjectId],
-      ref: "Meals",
+      ref: "Meal",
     },
     excercisePlans: {
       type: [mongoose.Schema.Types.ObjectId],

@@ -1,0 +1,38 @@
+type Event {
+  _id: ID!
+  date: String
+  client: String!
+  ownerId: String
+  status: Boolean
+  mealPlans: [Meal]
+  excercisePlans: [Excercise]
+}
+type Query {
+  events: [Event]
+}
+
+type Excercise {
+  _id: ID!
+  name: String!
+  created: String
+  video: String!
+  notes: String
+  ownerId: String!
+}
+type Meal {
+  _id: ID!
+  title: String!
+  created: String
+  image: String!
+  spoonacularId: Int!
+  sourceUrl: String!
+  ownerId: String!
+}
+
+# type User {
+#   id: ID!
+#   name: String!
+#   email: String!
+#   assignedTrainner: String!
+#   role: String!
+# }

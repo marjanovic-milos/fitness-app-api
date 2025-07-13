@@ -20,15 +20,23 @@ import helmet from "helmet";
 import { schema } from "./index";
 
 dotenv.config({ path: "./.env" });
+
 app.use(
   "/graphql",
-  graphqlHTTP({
+  graphqlHTTP((req, res) => ({
     schema,
     graphiql: true,
-  })
+    context: {
+      req,
+      res,
+    },
+  }))
 );
 app.use(mongoSanitize());
 app.use(helmet());
+
+// Body parser
+app.use(express.json());
 
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 mins
