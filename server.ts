@@ -10,16 +10,24 @@ import excerciseRoutes from "./routes/excerciseRoutes";
 import userRoutes from "./routes/userRoutes";
 import eventsRoutes from "./routes/eventsRoutes";
 import mongoSanitize from "express-mongo-sanitize";
-import xssClean from "xss-clean";
-import cors from "cors";
+import { graphqlHTTP } from "express-graphql";
+
+// import xssClean from "xss-clean";
+// import hpp from "hpp";
+// import cors from "cors";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
-import hpp from "hpp";
+import { schema } from "./index";
 
 dotenv.config({ path: "./.env" });
-
+app.use(
+  "/graphql",
+  graphqlHTTP({
+    schema,
+    graphiql: true,
+  })
+);
 app.use(mongoSanitize());
-app.use(xssClean());
 app.use(helmet());
 
 const limiter = rateLimit({
@@ -27,9 +35,10 @@ const limiter = rateLimit({
   max: 1000,
 });
 
-app.use(hpp());
+// app.use(hpp());
+// app.use(xssClean());
 
-app.use(cors());
+// app.use(cors());
 
 app.use(limiter);
 
