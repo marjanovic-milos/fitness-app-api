@@ -1,17 +1,10 @@
 import Event from "../../models/Event";
 import catchAsync from "../../middleware/async";
-import dayjs from "dayjs";
 import { Request, Response, NextFunction } from "express";
+import { currentWeek } from "../../utils/dateUtils";
 
-const currentWeek = () => {
-  const last3Days = dayjs().subtract(3, "day").format("YYYY-MM-DD");
-  const next3Days = dayjs().add(3, "day").format("YYYY-MM-DD");
-  return { last3Days, next3Days };
-};
-
-const getAllEvents = async (req: any, res: any, next: any) => {
-  console.log(req, res);
-  try {
+const getAllEvents = catchAsync(
+  async (_req: Request, _res: Response, _next: NextFunction) => {
     const { last3Days, next3Days } = currentWeek();
     const events = await Event.find({
       date: {
@@ -22,12 +15,10 @@ const getAllEvents = async (req: any, res: any, next: any) => {
       .populate("mealPlans")
       .populate("excercisePlans")
       .lean();
-    console.log("Events fetched:", events);
-    return events;
-  } catch (error) {
-    console.error("Error:", error);
+
+    _res.json(events);
   }
-};
+);
 
 module.exports = {
   getAllEvents,

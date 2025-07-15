@@ -28,11 +28,3 @@ type Meal {
   sourceUrl: String!
   ownerId: String!
 }
-
-# type User {
-#   id: ID!
-#   name: String!
-#   email: String!
-#   assignedTrainner: String!
-#   role: String!
-# }

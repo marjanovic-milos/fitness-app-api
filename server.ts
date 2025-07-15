@@ -9,12 +9,10 @@ import mealRoutes from "./routes/mealRoutes";
 import excerciseRoutes from "./routes/excerciseRoutes";
 import userRoutes from "./routes/userRoutes";
 import eventsRoutes from "./routes/eventsRoutes";
-import mongoSanitize from "express-mongo-sanitize";
+import AppError from "./utils/appError";
 import { graphqlHTTP } from "express-graphql";
 
-// import xssClean from "xss-clean";
-// import hpp from "hpp";
-// import cors from "cors";
+import cors from "cors";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import { schema } from "./index";
@@ -32,21 +30,13 @@ app.use(
     },
   }))
 );
-app.use(mongoSanitize());
+
 app.use(helmet());
-
-// Body parser
-app.use(express.json());
-
+app.use(cors());
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 mins
   max: 1000,
 });
-
-// app.use(hpp());
-// app.use(xssClean());
-
-// app.use(cors());
 
 app.use(limiter);
 
