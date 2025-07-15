@@ -26,6 +26,27 @@ const MealSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please add an owner Id "],
     },
+    protein: {
+      type: String,
+      set: (val: String) => val.replace(/g/gi, ""),
+
+      required: false,
+    },
+    calories: {
+      type: String,
+      set: (val: String) => val.replace(/g/gi, ""),
+      required: false,
+    },
+    fat: {
+      type: String,
+      set: (val: String) => val.replace(/g/gi, ""),
+      required: false,
+    },
+    carbs: {
+      type: String,
+      set: (val: String) => val.replace(/g/gi, ""),
+      required: false,
+    },
   },
   {
     toJSON: {
