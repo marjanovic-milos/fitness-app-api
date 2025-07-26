@@ -87,6 +87,17 @@ export const logout = catchAsync(
 
 // @desc    GET current user
 // @route   GET /api/v1/auth/getMe
-// @access  Private
 
-export const getMe = getOne(User);
+export const getMe = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.user as IUser;
+
+    let doc = await User.findById(id);
+
+    if (!doc) {
+      return next(new AppError("No document found with that ID", 404));
+    }
+
+    res.status(200).json({ success: true, data: doc });
+  }
+);

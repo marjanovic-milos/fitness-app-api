@@ -8,7 +8,6 @@ router.post("/signup", signup);
 router.post("/login", login);
 
 router.use(protect);
-
 router.get("/getMe", getMe);
 router.post("/logout", logout);
 

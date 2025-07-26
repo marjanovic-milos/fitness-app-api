@@ -1,7 +1,7 @@
 import express from "express";
 const app = express();
 import dotenv from "dotenv";
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 import errorHandler from "./middleware/erorr";
 import authRoutes from "./routes/authRoutes";
