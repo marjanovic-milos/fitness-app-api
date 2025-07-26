@@ -4,6 +4,7 @@ interface IUser {
   name: string;
   password?: string;
   role: string;
+
   correctPassword?: (
     candidatePassword: string,
     userPassword: string
@@ -13,6 +14,9 @@ interface IUser {
 declare global {
   namespace Express {
     interface Request {
+      user?: IUser | undefined;
+    }
+    interface Response {
       user?: IUser | undefined;
     }
   }
