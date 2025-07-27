@@ -10,7 +10,7 @@ import excerciseRoutes from "./routes/excerciseRoutes";
 import userRoutes from "./routes/userRoutes";
 import eventsRoutes from "./routes/eventsRoutes";
 import AppError from "./utils/appError";
-import { graphqlHTTP } from "express-graphql";
+// import { graphqlHTTP } from "express-graphql";
 
 import cors from "cors";
 import rateLimit from "express-rate-limit";
@@ -19,17 +19,17 @@ import { schema } from "./index";
 
 dotenv.config({ path: "./.env" });
 
-app.use(
-  "/graphql",
-  graphqlHTTP((req, res) => ({
-    schema,
-    graphiql: true,
-    context: {
-      req,
-      res,
-    },
-  }))
-);
+// app.use(
+//   "/graphql",
+//   graphqlHTTP((req, res) => ({
+//     schema,
+//     graphiql: true,
+//     context: {
+//       req,
+//       res,
+//     },
+//   }))
+// );
 
 app.use(helmet());
 app.use(cors());
