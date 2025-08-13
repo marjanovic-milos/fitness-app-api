@@ -32,7 +32,7 @@ dotenv.config({ path: "./.env" });
 // );
 
 app.use(helmet());
-app.use(cors());
+app.use(cors({ origin: "*" }));
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 mins
   max: 1000,

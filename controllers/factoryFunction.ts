@@ -73,22 +73,28 @@ export const getOne = (Model: any, options?: GetOnePopOptions | string) =>
 export const getAll = (Model: any, options?: GetOnePopOptions | string) =>
   catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const ownerId = req?.user?.id;
-
-    const data = new APIFeatures(Model.find({ ownerId }), req.query)
+    const features = new APIFeatures(Model.find({ ownerId }), req.query)
       .filter()
       .limitFields()
-      .sort()
-      .paginate();
+      .sort();
 
-    const doc = await data.query;
+    await features.countTotal();
+    features.paginate();
 
-    if (!doc) {
+    const doc = await features.query;
+
+    if (!doc || doc.length === 0) {
       return next(new AppError("No document found with that ID", 404));
     }
 
     res.status(200).json({
       status: "success",
       results: doc.length,
+      totalCount: features.totalCount,
+      totalPages: Math.ceil(
+        (features.totalCount as number) /
+          (req.query.limit ? +req.query.limit : (features.totalCount as number))
+      ),
       data: doc,
     });
   });

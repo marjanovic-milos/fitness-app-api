@@ -1,9 +1,11 @@
 class APIFeatures {
   queryString: any;
   query: any;
+  totalCount: any;
   constructor(query: any, queryString: any) {
     this.query = query;
     this.queryString = queryString;
+    this.totalCount = null;
   }
 
   filter() {
@@ -48,6 +50,13 @@ class APIFeatures {
 
     this.query = this.query.skip(skip).limit(limit);
 
+    return this;
+  }
+
+  async countTotal() {
+    this.totalCount = await this.query.model.countDocuments(
+      this.query.getFilter()
+    );
     return this;
   }
 }
