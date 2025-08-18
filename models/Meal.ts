@@ -12,11 +12,11 @@ const MealSchema = new mongoose.Schema(
     },
     image: {
       type: String,
-      required: [true, "Please add an image URL"],
+      // required: [true, "Please add an image URL"],
     },
     spoonacularId: {
       type: Number,
-      required: [true, "Please add a Spoonacular ID"],
+      // required: [true, "Please add a Spoonacular ID"],
     },
     sourceUrl: {
       type: String,
@@ -28,19 +28,19 @@ const MealSchema = new mongoose.Schema(
     },
     protein: {
       type: Number,
-      required: true,
+      required: [true, "Please add protein value"],
     },
     calories: {
       type: Number,
-      required: true,
+      required: [true, "Please add calories value"],
     },
     fat: {
       type: Number,
-      required: false,
+      required: [true, "Please add fat value"],
     },
     carbs: {
       type: Number,
-      required: false,
+      required: [true, "Please add carbs calue"],
     },
   },
   {
