@@ -12,6 +12,7 @@ const MealSchema = new mongoose.Schema(
     },
     image: {
       type: String,
+      default: "https://img.spoonacular.com/recipes/643514-312x231.jpg",
       // required: [true, "Please add an image URL"],
     },
     spoonacularId: {
