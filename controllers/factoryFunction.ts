@@ -3,8 +3,9 @@ import AppError from "../utils/appError";
 import APIFeatures from "../utils/apiFeatures";
 import { Request, Response, NextFunction } from "express";
 interface GetOnePopOptions {
-  path: string;
+  path?: string;
   select?: string;
+  ownerKey?: string;
 }
 
 export const deleteOne = (Model: any) =>
@@ -73,7 +74,19 @@ export const getOne = (Model: any, options?: GetOnePopOptions | string) =>
 export const getAll = (Model: any, options?: GetOnePopOptions | string) =>
   catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const ownerId = req?.user?.id;
-    const features = new APIFeatures(Model.find({ ownerId }), req.query)
+
+    let filter: { [key: string]: any } = { ownerId };
+
+    if (
+      options &&
+      typeof options === "object" &&
+      "ownerKey" in options &&
+      options.ownerKey
+    ) {
+      filter = { [options.ownerKey]: ownerId };
+    }
+
+    const features = new APIFeatures(Model.find(filter), req.query)
       .filter()
       .limitFields()
       .sort();

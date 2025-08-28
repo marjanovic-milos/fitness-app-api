@@ -3,31 +3,11 @@ import AppError from "../utils/appError";
 import User from "../models/User";
 import { Request, Response, NextFunction } from "express";
 import APIFeatures from "../utils/apiFeatures";
-
+import { getAll } from "./factoryFunction";
 // @desc    Get all users for Trainner
 // @access  Private
 // @route   GET /api/v1/users
-export const getUsers = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    if (!req.user || !req.user.id) {
-      return next(new AppError("User not authenticated", 401));
-    }
-    const ownerId = req.user.id;
-
-    const users = new APIFeatures(
-      User.find({ assignedTrainner: ownerId }),
-      req.query
-    )
-      .filter()
-      .limitFields()
-      .sort()
-      .paginate();
-
-    const doc = await users.query;
-
-    res.status(200).json({ success: true, data: doc });
-  }
-);
+export const getUsers = getAll(User, { ownerKey: "assignedTrainner" });
 
 // @desc    Get a user as a Trainner
 // @access  Private
