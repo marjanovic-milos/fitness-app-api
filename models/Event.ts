@@ -2,11 +2,19 @@ import mongoose from "mongoose";
 
 const EventSchema = new mongoose.Schema(
   {
-    date: {
+    createdAt: {
       type: Date,
       default: Date.now,
     },
 
+    start: {
+      type: Date,
+      required: true, // start datetime
+    },
+    end: {
+      type: Date,
+      required: true, // end datetime
+    },
     // Instead of single client → array of clients
     clients: [
       {
