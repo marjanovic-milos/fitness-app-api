@@ -9,17 +9,17 @@ const EventSchema = new mongoose.Schema(
 
     start: {
       type: Date,
-      required: true, // start datetime
+      required: true,
     },
     end: {
       type: Date,
-      required: true, // end datetime
+      required: true,
     },
     // Instead of single client → array of clients
     clients: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User", // assuming you have a User model
+        ref: "User",
         required: true,
       },
     ],
