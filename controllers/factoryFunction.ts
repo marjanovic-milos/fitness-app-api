@@ -2,6 +2,8 @@ import catchAsync from "../middleware/async";
 import AppError from "../utils/appError";
 import APIFeatures from "../utils/apiFeatures";
 import { Request, Response, NextFunction } from "express";
+import dayjs from "dayjs";
+
 interface GetOnePopOptions {
   path?: string;
   select?: string;
@@ -84,6 +86,29 @@ export const getAll = (Model: any, options?: GetOnePopOptions | string) =>
       options.ownerKey
     ) {
       filter = { [options.ownerKey]: ownerId };
+    }
+    const now = dayjs();
+    if (req.query.dateFilter) {
+      if (req.query.dateFilter === "day") {
+        filter.start = {
+          $gte: now.startOf("day").toDate(),
+          $lt: now.endOf("day").toDate(),
+        };
+      }
+
+      if (req.query.dateFilter === "week") {
+        filter.start = {
+          $gte: now.startOf("week").toDate(),
+          $lt: now.endOf("week").toDate(),
+        };
+      }
+
+      if (req.query.dateFilter === "month") {
+        filter.start = {
+          $gte: now.startOf("month").toDate(),
+          $lt: now.endOf("month").toDate(),
+        };
+      }
     }
 
     const features = new APIFeatures(Model.find(filter), req.query)

@@ -10,7 +10,7 @@ import { protect, authorize } from "../middleware/auth";
 
 const router = express.Router();
 
-router.get("/", getTrainerEvents);
+router.get("/", protect, authorize("trainer"), getTrainerEvents);
 
 router.post("/createEvent", protect, authorize("trainer"), createEvent);
 router.put("/:id", protect, authorize("trainer"), updateEvent);
