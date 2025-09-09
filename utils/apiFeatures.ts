@@ -9,9 +9,9 @@ class APIFeatures {
   }
 
   filter() {
-    if ("dateFilter" in this.queryString) {
-      return this;
-    }
+    // if ("dateFilter" in this.queryString) {
+    //   return this;
+    // }
     const queryObj = { ...this.queryString };
 
     const excludedFields = ["page", "sort", "limit", "fields"];
