@@ -69,16 +69,51 @@ export const getEvent = getOne(Event);
 export const createEvent = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const ownerId = req?.user?.id;
-    const repeatDays = req?.body?.repeatDays;
-    let doc;
-    if (!repeatDays?.length) {
-      doc = await Event.create({ ...req.body, ownerId });
+    const { start, end, repeatDays } = req.body;
+
+    let docs;
+
+    let repeatDaysArr: number[] = [];
+
+    repeatDaysArr = repeatDays?.map((d: any) => Number(d));
+
+    if (!repeatDaysArr?.length) {
+      docs = [await Event.create({ ...req.body, ownerId })];
     } else {
+      const rangeStart = dayjs(start).startOf("day");
+      const rangeEnd = rangeStart.add(1, "month").endOf("month");
+
+      const eventsToCreate = [];
+      let current = rangeStart.clone();
+
+      while (current.isBefore(rangeEnd) || current.isSame(rangeEnd, "day")) {
+        if (repeatDaysArr.includes(current.day())) {
+          eventsToCreate.push({
+            ...req.body,
+            ownerId,
+            start: current
+              .hour(dayjs(start).hour())
+              .minute(dayjs(start).minute())
+              .second(0)
+              .toDate(),
+            end: current
+              .hour(dayjs(end).hour())
+              .minute(dayjs(end).minute())
+              .second(0)
+              .toDate(),
+            repeatDays: [],
+          });
+        }
+        current = current.add(1, "day");
+      }
+      console.log(eventsToCreate, "eventsToCreate");
+      docs = await Event.insertMany(eventsToCreate);
     }
 
     res.status(200).json({
       status: "success",
-      data: doc,
+      count: docs.length,
+      data: docs,
     });
   }
 );
