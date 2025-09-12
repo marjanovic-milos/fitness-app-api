@@ -9,17 +9,21 @@ class APIFeatures {
   }
 
   filter() {
-    // if ("dateFilter" in this.queryString) {
-    //   return this;
-    // }
     const queryObj = { ...this.queryString };
+    let filters;
 
+    if (queryObj.ids) {
+      const ids = (queryObj.ids as string).split(",").map((id) => id.trim());
+      filters = { _id: { $in: ids } };
+      this.query.find(filters);
+      return this;
+    }
     const excludedFields = ["page", "sort", "limit", "fields"];
     excludedFields.forEach((el) => delete queryObj[el]);
 
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-    let filters = JSON.parse(queryStr);
+    filters = JSON.parse(queryStr);
 
     for (const key in filters) {
       if (typeof filters[key] === "string" && !key.startsWith("$")) {

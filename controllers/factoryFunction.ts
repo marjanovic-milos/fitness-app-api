@@ -87,15 +87,15 @@ export const getAll = (Model: any, options?: GetOnePopOptions | string) =>
       filter = { [options.ownerKey]: ownerId };
     }
 
-    const features = new APIFeatures(Model.find(filter), req.query)
+    const documents = new APIFeatures(Model.find(filter), req.query)
       .filter()
       .limitFields()
       .sort();
 
-    await features.countTotal();
-    features.paginate();
+    await documents.countTotal();
+    documents.paginate();
 
-    const doc = await features.query;
+    const doc = await documents.query;
 
     if (!doc || doc.length === 0) {
       return next(new AppError("No document found with that ID", 404));
@@ -104,10 +104,12 @@ export const getAll = (Model: any, options?: GetOnePopOptions | string) =>
     res.status(200).json({
       status: "success",
       results: doc.length,
-      totalCount: features.totalCount,
+      totalCount: documents.totalCount,
       totalPages: Math.ceil(
-        (features.totalCount as number) /
-          (req.query.limit ? +req.query.limit : (features.totalCount as number))
+        (documents.totalCount as number) /
+          (req.query.limit
+            ? +req.query.limit
+            : (documents.totalCount as number))
       ),
       data: doc,
     });
