@@ -23,18 +23,24 @@ const UserSchema = new mongoose.Schema(
         "Please add a valid email",
       ],
     },
-    assignedTrainner: {
+    ownerId: {
       type: String,
-      required: [true, "Please add an assigned trainner"],
+      required: function (this: IUser) {
+        return !this.password && !this.hasAuth;
+      },
     },
     role: {
       type: String,
       enum: ["client", "trainer"],
       default: "client",
     },
+    hasAuth: {
+      type: Boolean,
+      default: false,
+    },
+
     password: {
       type: String,
-      required: [true, "Please add a password"],
       minlength: 6,
       select: false,
     },
@@ -55,10 +61,11 @@ const UserSchema = new mongoose.Schema(
     },
   }
 );
-
 UserSchema.pre("save", async function (next) {
-  this.password = await bcrypt.hash(this.password, 12);
-
+  if (this.password) {
+    this.password = await bcrypt.hash(this.password, 12);
+    this.hasAuth = true;
+  }
   next();
 });
 
@@ -67,6 +74,7 @@ export interface IUser extends Document {
   email: string;
   role: "client" | "trainer";
   password: string;
+  hasAuth: Boolean;
   correctPassword(
     candidatePassword: string,
     userPassword: string

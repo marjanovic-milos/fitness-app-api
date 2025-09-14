@@ -3,11 +3,11 @@ import AppError from "../utils/appError";
 import User from "../models/User";
 import { Request, Response, NextFunction } from "express";
 import APIFeatures from "../utils/apiFeatures";
-import { getAll } from "./factoryFunction";
+import { getAll, createOne } from "./factoryFunction";
 // @desc    Get all users for Trainner
 // @access  Private
 // @route   GET /api/v1/users
-export const getUsers = getAll(User, { ownerKey: "assignedTrainner" });
+export const getUsers = getAll(User, { ownerKey: "ownerId" });
 
 // @desc    Get a user as a Trainner
 // @access  Private
@@ -21,7 +21,7 @@ export const getUser = catchAsync(
     const { id } = req.params;
     const user = await User.findById(id);
 
-    if (!user || user.assignedTrainner !== ownerId) {
+    if (!user || user.ownerId !== ownerId) {
       return next(
         new AppError("User not found or you are not authorized to see it.", 404)
       );
@@ -51,3 +51,5 @@ export const getAllTrainers = catchAsync(
     res.status(200).json({ success: true, data: doc });
   }
 );
+
+export const createUser = createOne(User);
