@@ -7,7 +7,9 @@ const router = express.Router();
 router.get("/", protect, authorize("trainer"), getMemberships);
 
 router.post("/", protect, authorize("trainer"), createMembership);
-router.put("/:id", protect, authorize("trainer"), updateMembership);
+
+router.put("/:ids", protect, authorize("trainer"), updateMembership);
+
 router.delete("/:id", protect, authorize("trainer"), deleteMembership);
 router.get("/:id", getOneMembership);
 

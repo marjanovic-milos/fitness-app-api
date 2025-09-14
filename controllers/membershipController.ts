@@ -18,19 +18,33 @@ export const getOneMembership = getOne(Membership);
 // @route   POST /api/v1/memberships
 export const createMembership = createOne(Membership);
 
-// @desc    Update a membership
-// @access  Private
-// @route   PUT /api/v1/meals/memberships/:id
 export const updateMembership = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const membershipId = req?.params?.id;
-  const ownerId = req?.user?.id;
+  const idsQuery: any = req.params.ids;
 
-  const doc = await (Membership as MembershipModel).decrementTrainingCountForUsers(membershipId, ownerId, 1);
+  const ids = idsQuery
+    ?.replace(/^ids=/, "")
+    ?.split(",")
+    ?.map((id: string) => id.trim());
 
-  if (!doc) {
-    return next(new AppError("No document found with that ID", 404));
+  if (!ids) {
+    return next(new AppError("No membership id(s) provided", 400));
   }
-  res.status(200).json({ success: true, data: doc });
+
+  const ownerId = req.user?.id;
+  if (!ownerId) {
+    return next(new AppError("Unauthorized: owner ID missing", 401));
+  }
+
+  const result = await (Membership as MembershipModel).decrementTrainingCountForUsers(ids, ownerId, 1);
+
+  if (!result || (Array.isArray(result) && result.length === 0)) {
+    return next(new AppError("No document found with that ID(s)", 404));
+  }
+
+  res.status(200).json({
+    success: true,
+    data: result,
+  });
 });
 
 // @desc    Delete a membership

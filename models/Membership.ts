@@ -63,30 +63,45 @@ MembershipSchema.pre("save", function (next) {
   next();
 });
 
-// MembershipSchema.statics.decrementTrainingCount = async function (membershipId: string, ownerId: string, decrementBy = 1) {
-//   return this.findOneAndUpdate(
-//     { _id: membershipId, ownerId }, // match by ID and ownerId
-//     { $inc: { trainingCount: -decrementBy } },
-//     { new: true }
-//   );
-// };
-
 MembershipSchema.statics.decrementTrainingCountForUsers = async function (userIds: string | string[], ownerId: string, decrementBy = 1) {
-  // Normalize to array
-  const ids = Array.isArray(userIds) ? userIds : [userIds];
+  const now = new Date();
 
-  if (ids.length === 0) return;
+  const results: {
+    id: string;
+    status: "updated" | "skipped";
+    reason?: string;
+    trainingCount?: number;
+  }[] = [];
 
-  return this.updateMany(
-    {
-      userId: { $in: ids },
-      ownerId,
-      trainingCount: { $gte: decrementBy }, // Optional: skip if not enough
-    },
-    {
-      $inc: { trainingCount: -decrementBy },
+  for (const id of userIds) {
+    const membership = await this.findOne({ userId: id, ownerId });
+
+    if (!membership) {
+      results.push({ id, status: "skipped", reason: "Membership not found" });
+      continue;
     }
-  );
+
+    if (membership.expiryDate && membership.expiryDate < now) {
+      results.push({ id, status: "skipped", reason: "Membership expired" });
+      continue;
+    }
+
+    if (membership.trainingCount < decrementBy) {
+      results.push({ id, status: "skipped", reason: "Not enough training count" });
+      continue;
+    }
+
+    membership.trainingCount -= decrementBy;
+    await membership.save();
+
+    results.push({
+      id,
+      status: "updated",
+      trainingCount: membership.trainingCount,
+    });
+  }
+
+  return results;
 };
 
 export default mongoose.model("Membership", MembershipSchema);
