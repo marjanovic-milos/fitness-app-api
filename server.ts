@@ -9,6 +9,7 @@ import mealRoutes from "./routes/mealRoutes";
 import excerciseRoutes from "./routes/excerciseRoutes";
 import userRoutes from "./routes/userRoutes";
 import eventsRoutes from "./routes/eventsRoutes";
+import membershipRoutes from "./routes/membershipsRoutes";
 import AppError from "./utils/appError";
 // import { graphqlHTTP } from "express-graphql";
 
@@ -53,6 +54,7 @@ app.use("/api/v1/meals", mealRoutes);
 app.use("/api/v1/excercises", excerciseRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/events", eventsRoutes);
+app.use("/api/v1/memberships", membershipRoutes);
 
 connectDB();
 
