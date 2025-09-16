@@ -78,13 +78,13 @@ const EventSchema = new mongoose.Schema(
   }
 );
 
-EventSchema.pre("save", function (next) {
-  if (this.clients && this.clients.length > 1) {
-    this.trainingType = "group";
-  } else {
-    this.trainingType = "personal";
-  }
-  next();
-});
+// EventSchema.pre("save", function (next) {
+//   if (this.clients && this.clients.length > 1) {
+//     this.trainingType = "group";
+//   } else {
+//     this.trainingType = "personal";
+//   }
+//   next();
+// });
 
 export default mongoose.model("Event", EventSchema);
