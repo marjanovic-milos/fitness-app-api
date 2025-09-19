@@ -7,11 +7,17 @@ interface MembershipDoc extends Document {
   trainingCount: number;
   ownerId: string;
   userId: string | string[];
+  price: number;
+  active: Boolean;
   decrementTrainingCountForUsers: void;
 }
 
 export interface MembershipModel extends Model<MembershipDoc> {
-  decrementTrainingCountForUsers(userIds: string | string[], ownerId: string, decrementBy?: number): Promise<MembershipDoc | null>;
+  decrementTrainingCountForUsers(
+    userIds: string | string[],
+    ownerId: string,
+    decrementBy?: number
+  ): Promise<MembershipDoc | null>;
 }
 
 const MembershipSchema = new mongoose.Schema<MembershipDoc>(
@@ -38,6 +44,13 @@ const MembershipSchema = new mongoose.Schema<MembershipDoc>(
       ref: "User",
       required: true,
     },
+    price: {
+      type: Number,
+    },
+    active: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     toJSON: {
@@ -63,7 +76,11 @@ MembershipSchema.pre("save", function (next) {
   next();
 });
 
-MembershipSchema.statics.decrementTrainingCountForUsers = async function (userIds: string | string[], ownerId: string, decrementBy = 1) {
+MembershipSchema.statics.decrementTrainingCountForUsers = async function (
+  userIds: string | string[],
+  ownerId: string,
+  decrementBy = 1
+) {
   const now = new Date();
 
   const results: {
@@ -87,7 +104,11 @@ MembershipSchema.statics.decrementTrainingCountForUsers = async function (userId
     }
 
     if (membership.trainingCount < decrementBy) {
-      results.push({ id, status: "skipped", reason: "Not enough training count" });
+      results.push({
+        id,
+        status: "skipped",
+        reason: "Not enough training count",
+      });
       continue;
     }
 
