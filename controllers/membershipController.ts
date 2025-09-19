@@ -7,7 +7,7 @@ import { MembershipModel } from "../models/Membership";
 // @desc    Get all memberships per owner
 // @access  Private
 // @route   GET /api/v1/memberships
-export const getMemberships = getAll(Membership);
+export const getMemberships = getAll(Membership , { userId: "userId" });
 
 // @desc    Get meal by Id
 // @access  Private

@@ -8,6 +8,7 @@ interface GetOnePopOptions {
   path?: string;
   select?: string;
   ownerKey?: string;
+  userId?: string;
 }
 
 export const deleteOne = (Model: any) =>
@@ -76,7 +77,9 @@ export const getOne = (Model: any, options?: GetOnePopOptions | string) =>
 export const getAll = (Model: any, options?: GetOnePopOptions | string) =>
   catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const ownerId = req?.user?.id;
-    let filter: { [key: string]: any } = { ownerId };
+    const userId = req?.params?.userId;
+
+    let filter: { [key: string]: any } = { ownerId, userId };
 
     if (
       options &&
@@ -85,6 +88,15 @@ export const getAll = (Model: any, options?: GetOnePopOptions | string) =>
       options.ownerKey
     ) {
       filter = { [options.ownerKey]: ownerId };
+    }
+
+    if (
+      options &&
+      typeof options === "object" &&
+      "userId" in options &&
+      options.userId
+    ) {
+      filter = { [options.userId]: userId };
     }
 
     const documents = new APIFeatures(Model.find(filter), req.query)
