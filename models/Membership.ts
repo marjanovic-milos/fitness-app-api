@@ -29,6 +29,7 @@ const MembershipSchema = new mongoose.Schema<MembershipDoc>(
 
     expiryDate: {
       type: Date,
+      default: null,
     },
 
     trainingCount: {
@@ -70,7 +71,9 @@ const MembershipSchema = new mongoose.Schema<MembershipDoc>(
 
 MembershipSchema.pre("save", function (next) {
   if (!this.expiryDate) {
-    this.expiryDate = dayjs(this.createdAt).add(1, "month").toDate();
+    const rangeStart = dayjs(Date.now()).startOf("day");
+    const rangeEnd = rangeStart.add(1, "month").endOf("month");
+    this.expiryDate = rangeEnd.toDate();
   }
 
   next();
