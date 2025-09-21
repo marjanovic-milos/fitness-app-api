@@ -1,6 +1,6 @@
 import mongoose, { Model } from "mongoose";
 import dayjs from "dayjs";
-
+import AppError from "../utils/appError";
 interface MembershipDoc extends Document {
   createdAt: Date;
   expiryDate?: Date;
@@ -74,6 +74,25 @@ MembershipSchema.pre("save", function (next) {
     const rangeStart = dayjs(Date.now()).startOf("day");
     const rangeEnd = rangeStart.add(1, "month").endOf("month");
     this.expiryDate = rangeEnd.toDate();
+  }
+
+  next();
+});
+
+MembershipSchema.pre("save", async function (next) {
+  const Membership = mongoose.model("Membership", MembershipSchema);
+
+  const existing = await Membership.findOne({
+    userId: this.userId,
+    ownerId: this.ownerId,
+    active: true,
+    expiryDate: { $gte: new Date() },
+  });
+
+  if (existing) {
+    return next(
+      new AppError("User already has an active membership with this owner", 409)
+    );
   }
 
   next();
