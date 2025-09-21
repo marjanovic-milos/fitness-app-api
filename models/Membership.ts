@@ -80,6 +80,9 @@ MembershipSchema.pre("save", function (next) {
 });
 
 MembershipSchema.pre("save", async function (next) {
+  if (!this.isNew) {
+    return next(); // skip for updates
+  }
   const Membership = mongoose.model("Membership", MembershipSchema);
 
   const existing = await Membership.findOne({
